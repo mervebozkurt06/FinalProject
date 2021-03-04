@@ -45,7 +45,10 @@ namespace DataAccess.Concrete.EntityFramework
             using (NortwindContext context = new NortwindContext())
             {
                 // filtre null mı ? evetse bu çalışır : hayırsa bu çalışır
-                return filter == null ? context.Set<Product>().ToList() : context.Set<Product>().Where(filter).ToList();
+                return filter == null 
+                    ? context.Set<Product>().ToList() 
+                    : context.Set<Product>().Where(filter).ToList(); //Product products tablosuyla ilişkili
+                                        //filtre null ile tüm listeyi ToList olarak döndür : filtre null değilse Products tablosunda filter edilen şeyi bul
             }
         }
 
