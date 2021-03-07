@@ -16,6 +16,7 @@ namespace Business.Concrete
     {
         IProductDal _productDal;
 
+        //constructor injection ile ProductManager ın bağımlılığı çözüldü
         public ProductManager(IProductDal productDal)
         {
             _productDal = productDal;
@@ -36,10 +37,10 @@ namespace Business.Concrete
 
         public IDataResult<List<Product>> GetAll()
         {
-            if(DateTime.Now.Hour==22)
-            {
-                return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
-            }
+            //if(DateTime.Now.Hour==22)
+            //{
+            //    return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
+            //}
 
             return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
             
