@@ -31,8 +31,8 @@ namespace WebAPI
         {
             services.AddControllers();
             //Biri constructor da IProductService isterse ProductManager ý newleyip ona verir
-            services.AddSingleton<IProductService,ProductManager>();//içinde data tutmuyorsan singleton kullan!!
-            services.AddSingleton<IProductDal,EfProductDal>();
+            //services.AddSingleton<IProductService,ProductManager>();//içinde data tutmuyorsan singleton kullan!!
+            //services.AddSingleton<IProductDal,EfProductDal>();
 
         }
 
