@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
@@ -18,20 +19,32 @@ namespace Business.Concrete
     //manager somut 
     public class ProductManager : IProductService
     {
-        IProductDal _productDal;
+        IProductDal _productDal; //constructor injection ile ProductManager ın bağımlılığı çözüldü
+        ILogger _logger;
 
-        //constructor injection ile ProductManager ın bağımlılığı çözüldü
-        public ProductManager(IProductDal productDal)
+        public ProductManager(IProductDal productDal,ILogger logger)
         {
             _productDal = productDal;
+            _logger = logger;
         }
 
-        [ValidationAspect(typeof(ProductValidator))]
+        //[ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
-            _productDal.Add(product);
+            _logger.Log();
+            try
+            {
+                //business codes
+                _productDal.Add(product);
 
-            return new SuccessResult(Messages.ProductAdded);
+                return new SuccessResult(Messages.ProductAdded);
+            }
+            catch (Exception exception)
+            {
+                _logger.Log();
+            }
+            return new ErrorResult();
+            
         }
 
         public IDataResult<List<Product>> GetAll()
