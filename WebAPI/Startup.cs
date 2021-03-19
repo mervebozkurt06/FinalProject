@@ -31,6 +31,7 @@ namespace WebAPI
         {
             services.AddControllers();
             //Biri constructor da IProductService isterse ProductManager ý newleyip ona verir
+            //------Bu çözümlemeyi artýk business ta AutofacBusinessModule de yapýlacaks
             //services.AddSingleton<IProductService,ProductManager>();//içinde data tutmuyorsan singleton kullan!!
             //services.AddSingleton<IProductDal,EfProductDal>();
 

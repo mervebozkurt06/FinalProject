@@ -1,10 +1,13 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -24,12 +27,12 @@ namespace Business.Concrete
 
         public IResult Add(Product product)
         {
-            //bussiness codes (ürünü eklemeden önce kurallar varsa)
-            if(product.ProductName.Length<2)
-            {
-                //magic strings
-                return new ErrorResult(Messages.ProductNameInvalid);
-            }
+            //bussiness codes (ürünü eklemeden önce kurallar varsa) (is ihtiyaclarına uygunluk)
+            //validation=dogrulama (yapısal olarak uygun mu)
+
+            
+            ValidationTool.Validate(new ProductValidator(), product);
+
             _productDal.Add(product);
 
             return new SuccessResult(Messages.ProductAdded);
@@ -42,8 +45,8 @@ namespace Business.Concrete
                 return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
             }
 
-            return new SuccessDataResult<List<Product>>(_productDal.GetAll(),Messages.ProductsListed);
-            
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(), Messages.ProductsListed);
+
         }
 
         public IDataResult<List<Product>> GetAllByCategoryId(int id)
@@ -53,7 +56,7 @@ namespace Business.Concrete
 
         public IDataResult<Product> GetById(int productId)
         {
-            return new SuccessDataResult<Product>(_productDal.Get(p=>p.ProductId == productId));
+            return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
         }
 
         public IDataResult<List<Product>> GetByUnitPrice(decimal min, decimal max)
