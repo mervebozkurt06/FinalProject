@@ -20,31 +20,24 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         IProductDal _productDal; //constructor injection ile ProductManager ın bağımlılığı çözüldü
-        ILogger _logger;
 
-        public ProductManager(IProductDal productDal,ILogger logger)
+        public ProductManager(IProductDal productDal)
         {
             _productDal = productDal;
-            _logger = logger;
         }
 
-        //[ValidationAspect(typeof(ProductValidator))]
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
-            _logger.Log();
-            try
+            //business codes
+
+            if (CheckIfProductCountOfCategoryCorrect(product.CategoryId).Success)
             {
-                //business codes
                 _productDal.Add(product);
 
                 return new SuccessResult(Messages.ProductAdded);
             }
-            catch (Exception exception)
-            {
-                _logger.Log();
-            }
             return new ErrorResult();
-            
         }
 
         public IDataResult<List<Product>> GetAll()
@@ -82,6 +75,29 @@ namespace Business.Concrete
 
             return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails(), Messages.ProductsListed);
 
+        }
+
+        [ValidationAspect(typeof(ProductValidator))]
+        public IResult Update(Product product)
+        {
+            var result = _productDal.GetAll(p => p.CategoryId == product.CategoryId).Count;
+            if (result >= 10)
+            {
+                return new ErrorResult(Messages.ProductCountOfCategoryError);
+            }
+            throw new NotImplementedException();
+        }
+
+
+        private IResult CheckIfProductCountOfCategoryCorrect(int categoryId)
+        {
+            //Select count(*) from products where categoryId=1
+            var result = _productDal.GetAll(p => p.CategoryId == categoryId).Count;
+            if (result >= 15)
+            {
+                return new ErrorResult(Messages.ProductCountOfCategoryError);
+            }
+            return new SuccessResult();
         }
     }
 }

@@ -19,7 +19,6 @@ namespace Business.DependencyResolvers.Autofac
         {
             builder.RegisterType<ProductManager>().As<IProductService>().SingleInstance(); //IProductService istendiğinde ProductManager instance ı ver
             builder.RegisterType<EfProductDal>().As<IProductDal>().SingleInstance();
-            builder.RegisterType<FileLogger>().As<ILogger>().SingleInstance();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 
